@@ -6,43 +6,53 @@
 <title>Camera Access with Teleprompter</title>
 <style>
   body {
+    font-family: 'Arial', sans-serif;
     margin: 0;
-    font-family: Arial, sans-serif;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
   }
   #container {
     position: relative;
-    width: 100vw;
-    height: 50vh; /* Set the video height to 50% of the viewport height */
+    width: 90%;
+    max-width: 640px;
+    margin: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   #videoElement {
     width: 100%;
-    height: 100%; /* Make video fill the container */
-    object-fit: cover; /* This will cover the whole area without stretching */
+    display: block; /* remove extra space below video */
   }
   #teleprompter {
     position: absolute;
     bottom: 10px;
-    width: 50%;
+    width: 100%;
     text-align: center;
     color: white;
     font-size: 24px;
     font-weight: bold;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    padding: 10px 0;
-  }
-  #controls {
-    text-align: center;
-    margin-top: 20px;
+    background-color: rgba(0, 0, 0, 0.5); /* semi-transparent background */
+    padding: 10px;
   }
   textarea {
-    width: 50%;
-    margin-bottom: 10px;
+    width: 90%;
+    margin-top: 10px;
   }
   button {
-    margin: 5px;
-    padding: 10px 10px;
-    font-size: 16px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    margin-right: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #0056b3;
   }
 </style>
 </head>
@@ -50,14 +60,12 @@
 
 <div id="container">
     <video id="videoElement" autoplay></video>
-    <div id="teleprompter">提词器blablabla</div>
+    <div id="teleprompter">无</div>
 </div>
 
-<div id="controls">
-    <button onclick="startCamera()">开启摄像头</button>
-    <textarea id="promptText" placeholder="输入文字"></textarea>
-    <button onclick="updateTeleprompter()">更新文字</button>
-</div>
+<button onclick="startCamera()">开启摄像头</button>
+<textarea id="promptText" placeholder="请在此输入文字"></textarea>
+<button onclick="updateTeleprompter()">更新文本</button>
 
 <script>
 function startCamera() {
@@ -69,17 +77,23 @@ function startCamera() {
                 video.srcObject = stream;
             })
             .catch(function (error) {
-                console.log("Something went wrong!", error);
+                console.log("错误!", error);
+                alert("无法打开摄像头，请检查浏览器权限.");
             });
+    } else {
+        alert("你的浏览器不支持打开摄像头.");
     }
 }
 
 function updateTeleprompter() {
     var text = document.getElementById('promptText').value;
+    if(text.trim() === "") {
+        alert("请输入文字.");
+        return;
+    }
     document.getElementById('teleprompter').innerText = text;
 }
 </script>
 
 </body>
 </html>
-
